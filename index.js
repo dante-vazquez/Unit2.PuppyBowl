@@ -11,6 +11,12 @@ thumbnailContainer.style.alignItems = 'flex-start';
 thumbnailContainer.style.justifyContent = 'flex-start';
 thumbnailContainer.style.flexWrap = 'wrap';
 
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const openModalBtn = document.querySelector(".btn-open");
+const closeModalBtn = document.querySelector(".btn-close");
+const addRosterBtn = dispatchEvent.querySelector(".btn");
+
 const sectionDivider = document.getElementById('divider-line');
 sectionDivider.style.borderBottom = '8px solid black';
 
@@ -84,11 +90,29 @@ function renderImages(){
         thumbnailContainer.appendChild(clickableItemContainer);
 
         clickableItemContainer.addEventListener("click", () => {
-            alert(`You clicked on ${item.puppyName}`);
+            openModal();
         });
     })
 }
 
+const openModal = function () {
+    modal.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+
+    //display the modal relative to where user is on screen
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    modal.style.top = scrollTop + (window.innerHeight / 2) + 'px';
+};
+
+const closeModal = function () {
+    modal.classList.add("hidden");
+    overlay.classList.add("hidden");
+};
+
+closeModalBtn.addEventListener("click", closeModal);
+
+
+  
 fetchDogData(API_URL);
 console.log("rest");
 
