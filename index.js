@@ -15,7 +15,7 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const openModalBtn = document.querySelector(".btn-open");
 const closeModalBtn = document.querySelector(".btn-close");
-const addRosterBtn = dispatchEvent.querySelector(".btn");
+const addRosterBtn = document.querySelector(".btn");
 
 const sectionDivider = document.getElementById('divider-line');
 sectionDivider.style.borderBottom = '8px solid black';
