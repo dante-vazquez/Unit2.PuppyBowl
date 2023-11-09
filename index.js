@@ -20,6 +20,14 @@ const addRosterBtn = document.querySelector(".btn");
 const sectionDivider = document.getElementById('divider-line');
 sectionDivider.style.borderBottom = '8px solid black';
 
+const rosterContainer = document.getElementById('roster-container');
+rosterContainer.style.display = 'flex';
+rosterContainer.style.alignItems = 'flex-start';
+rosterContainer.style.justifyContent = 'flex-start';
+rosterContainer.style.flexWrap = 'wrap';
+
+const dogDescription = document.getElementById('dog-description');
+
 
 
 async function fetchDogData(url){
@@ -59,6 +67,8 @@ function loadImages(inData){
 
 //THIS RENDERS THE CARD IMAGES
 function renderImages(){
+
+    thumbnailContainer.innerHTML = '';
 
     images.forEach(item => {
 
@@ -101,6 +111,46 @@ function renderImages(){
 //THIS RENDERS THE ROSTER CARDS
 function renderRoster(){
 
+    rosterContainer.innerHTML = '';
+
+    roster.forEach(item => {
+
+        //image element
+        const imageElement = document.createElement('img');
+        imageElement.src = item.imageUrl;
+        imageElement.alt = item.puppyName;
+        imageElement.style.width = '200px';
+        imageElement.style.height = '300px';
+        imageElement.style.objectFit = 'cover';
+
+
+        //name element
+        const puppyNameElement = document.createElement('p');
+        puppyNameElement.textContent = item.puppyName;
+
+        //create a div and place inside thumbnail container
+        const clickableItemContainer = document.createElement('div');
+        clickableItemContainer.style.backgroundColor = 'blue';
+        clickableItemContainer.style.border = '2px solid black';
+        clickableItemContainer.style.minWidth = '200px';
+        clickableItemContainer.style.minHeight = '300px';
+        clickableItemContainer.style.margin = '10px';
+
+        
+
+        clickableItemContainer.appendChild(puppyNameElement);
+        clickableItemContainer.appendChild(imageElement);
+
+        rosterContainer.appendChild(clickableItemContainer);
+
+        clickableItemContainer.addEventListener("click", () => {
+           alert("this did something");
+    
+        });
+    })
+
+
+
 }
 
 const openModal = function () {
@@ -110,6 +160,7 @@ const openModal = function () {
     //display the modal relative to where user is on screen
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     modal.style.top = scrollTop + (window.innerHeight / 2) + 'px';
+
 };
 
 const closeModal = function () {
@@ -120,8 +171,8 @@ const closeModal = function () {
 addRosterBtn.addEventListener("click", () => {
 
     addDogToRosterById(currentId);
-    thumbnailContainer.innerHTML = '';
     renderImages();
+    renderRoster();
     closeModal();
     
 })
