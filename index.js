@@ -26,7 +26,7 @@ rosterContainer.style.alignItems = 'flex-start';
 rosterContainer.style.justifyContent = 'flex-start';
 rosterContainer.style.flexWrap = 'wrap';
 
-const dogDescription = document.getElementById('dog-description');
+const dogDescription = document.getElementById('description');
 
 
 
@@ -79,10 +79,12 @@ function renderImages(){
         imageElement.style.width = '200px';
         imageElement.style.height = '300px';
         imageElement.style.objectFit = 'cover';
+        imageElement.style.borderRadius = '15px';
 
 
         //name element
         const puppyNameElement = document.createElement('p');
+        puppyNameElement.style.paddingLeft = '5px';
         puppyNameElement.textContent = item.puppyName;
 
         //create a div and place inside thumbnail container
@@ -92,8 +94,7 @@ function renderImages(){
         clickableItemContainer.style.minWidth = '200px';
         clickableItemContainer.style.minHeight = '300px';
         clickableItemContainer.style.margin = '10px';
-
-        
+        clickableItemContainer.style.borderRadius = '15px';
 
         clickableItemContainer.appendChild(puppyNameElement);
         clickableItemContainer.appendChild(imageElement);
@@ -101,8 +102,9 @@ function renderImages(){
         thumbnailContainer.appendChild(clickableItemContainer);
 
         clickableItemContainer.addEventListener("click", () => {
-            openModal();
+
             currentId = item.id;
+            openModal();
     
         });
     })
@@ -144,7 +146,18 @@ function renderRoster(){
         rosterContainer.appendChild(clickableItemContainer);
 
         clickableItemContainer.addEventListener("click", () => {
-           alert("this did something");
+           if(confirm("Are you sure you wanna remove " + roster[rosterGetDog(currentId)].puppyName + " from the roster?")){
+
+                console.log("te " + item.id);
+                currentId = item.id;
+                removeDogFromRosterbyId(currentId);
+                renderImages();
+                renderRoster();
+           }
+           else{
+            console.log("user pressed no");
+           }
+
     
         });
     })
@@ -161,12 +174,45 @@ const openModal = function () {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     modal.style.top = scrollTop + (window.innerHeight / 2) + 'px';
 
+    renderModal();
+
 };
+
+function renderModal(){
+
+    dogDescription.innerHTML = '';
+    console.log("is modal rendering?");
+    currentDogIndex = getDog(currentId);
+    console.log(images[currentId]);
+
+    const imageElement = document.createElement('img');
+    imageElement.src = images[currentDogIndex].imageUrl;
+    imageElement.alt = images[currentDogIndex].puppyName;
+    imageElement.style.width = '200px';
+    imageElement.style.height = '300px';
+    imageElement.style.objectFit = 'cover';
+
+    const dogNameElement = document.createElement('p');
+    dogNameElement.textContent = "Name: " + images[currentDogIndex].puppyName;
+    const dogBreedElement = document.createElement('p');
+    dogBreedElement.textContent = "Breed: " + images[currentDogIndex].breed;
+
+    dogDescription.appendChild(imageElement);
+    dogDescription.appendChild(dogNameElement);
+    dogDescription.appendChild(dogBreedElement);
+
+
+
+
+}
 
 const closeModal = function () {
     modal.classList.add("hidden");
     overlay.classList.add("hidden");
+    console.log("are we closing?");
 };
+
+closeModalBtn.addEventListener("click", closeModal);
 
 addRosterBtn.addEventListener("click", () => {
 
@@ -189,6 +235,27 @@ function addDogToRosterById(idToAdd){
     else{
         console.log('Dog with id ${idToRemove} not found in the array.');
     }
+}
+
+function removeDogFromRosterbyId(idToRemove){
+    const i = rosterGetDog(idToRemove);
+    console.log("ind " + i);
+    if(i !== -1){
+        images.push(roster[i]);
+        roster.splice(i, 1);
+        console.log('Dog with id ${idToAdd} successfully removed from roster.');
+    }
+    else{
+        console.log('Dog with id ${idToRemove} not found in the array.');
+    }
+}
+
+function getDog(id){
+    return images.findIndex(dog => dog.id === id);
+}
+
+function rosterGetDog(id){
+    return roster.findIndex(dog => dog.id === id);
 }
 
   
