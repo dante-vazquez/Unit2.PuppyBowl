@@ -117,6 +117,7 @@ function renderRoster(){
 
     roster.forEach(item => {
 
+        currentId = item.id;
         //image element
         const imageElement = document.createElement('img');
         imageElement.src = item.imageUrl;
