@@ -27,6 +27,7 @@ rosterContainer.style.justifyContent = 'flex-start';
 rosterContainer.style.flexWrap = 'wrap';
 
 const dogDescription = document.getElementById('description');
+const instructions = document.getElementById('instructions');
 
 
 
@@ -158,6 +159,7 @@ function renderRoster(){
                 removeDogFromRosterbyId(currentId);
                 renderImages();
                 renderRoster();
+                updateInstructions();
            }
            else{
             console.log("user pressed no");
@@ -224,6 +226,7 @@ addRosterBtn.addEventListener("click", () => {
     addDogToRosterById(currentId);
     renderImages();
     renderRoster();
+    updateInstructions();
     closeModal();
     
 })
@@ -261,6 +264,15 @@ function getDog(id){
 
 function rosterGetDog(id){
     return roster.findIndex(dog => dog.id === id);
+}
+
+function updateInstructions(){
+    if(roster.length < 1){
+        instructions.textContent = 'Click on puppy to add to roster';
+    }
+    else{
+        instructions.textContent = 'Click on puppy to remove from roster';
+    }
 }
 
   
