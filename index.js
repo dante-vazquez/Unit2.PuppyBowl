@@ -129,6 +129,7 @@ function renderRoster(){
 
         //name element
         const puppyNameElement = document.createElement('p');
+        puppyNameElement.style.paddingLeft = '5px';
         puppyNameElement.textContent = item.puppyName;
 
         //create a div and place inside thumbnail container
