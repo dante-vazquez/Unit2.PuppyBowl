@@ -77,9 +77,8 @@ function renderImages(){
         imageElement.src = item.imageUrl;
         imageElement.alt = item.puppyName;
         imageElement.style.width = '200px';
-        imageElement.style.height = '300px';
+        imageElement.style.height = '280px';
         imageElement.style.objectFit = 'cover';
-        imageElement.style.borderRadius = '15px';
 
 
         //name element
@@ -89,10 +88,10 @@ function renderImages(){
 
         //create a div and place inside thumbnail container
         const clickableItemContainer = document.createElement('div');
-        clickableItemContainer.style.backgroundColor = 'blue';
+        clickableItemContainer.style.backgroundColor = '#F0EAD6';
         clickableItemContainer.style.border = '2px solid black';
         clickableItemContainer.style.minWidth = '200px';
-        clickableItemContainer.style.minHeight = '300px';
+        clickableItemContainer.style.minHeight = '320px';
         clickableItemContainer.style.margin = '10px';
         clickableItemContainer.style.borderRadius = '15px';
 
@@ -123,8 +122,9 @@ function renderRoster(){
         imageElement.src = item.imageUrl;
         imageElement.alt = item.puppyName;
         imageElement.style.width = '200px';
-        imageElement.style.height = '300px';
+        imageElement.style.height = '280px';
         imageElement.style.objectFit = 'cover';
+
 
 
         //name element
@@ -133,11 +133,14 @@ function renderRoster(){
 
         //create a div and place inside thumbnail container
         const clickableItemContainer = document.createElement('div');
-        clickableItemContainer.style.backgroundColor = 'blue';
+        clickableItemContainer.style.backgroundColor = '#F0EAD6';
         clickableItemContainer.style.border = '2px solid black';
         clickableItemContainer.style.minWidth = '200px';
-        clickableItemContainer.style.minHeight = '300px';
+        clickableItemContainer.style.minHeight = '320px';
         clickableItemContainer.style.margin = '10px';
+        clickableItemContainer.style.borderRadius = '15px';
+
+
 
         
 
@@ -173,7 +176,7 @@ const openModal = function () {
 
     //display the modal relative to where user is on screen
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    modal.style.top = scrollTop + (window.innerHeight / 2) + 'px';
+    modal.style.top = scrollTop + (window.innerHeight / 4.5) + 'px';
 
     renderModal();
 
