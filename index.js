@@ -86,6 +86,7 @@ function createCard(item){
     clickableItemContainer.style.minHeight = '320px';
     clickableItemContainer.style.margin = '10px';
     clickableItemContainer.style.borderRadius = '15px';
+    clickableItemContainer.style.cursor = 'pointer';
 
     //add the image and name to the card container
     clickableItemContainer.appendChild(puppyNameElement);
@@ -93,6 +94,131 @@ function createCard(item){
 
     return clickableItemContainer;
 }
+
+function createAddCard(){
+
+    const textElement = document.createElement('p');
+    textElement.textContent = 'Add a puppy to database';
+    textElement.style.textAlign = 'center';
+
+    const plusElement = document.createElement('div');
+    plusElement.textContent = '+';
+    plusElement.style.fontSize = '300px';
+    plusElement.style.fontWeight = 'bold';
+    plusElement.style.textAlign = 'center';
+    plusElement.style.marginTop = '-60px';
+
+    const clickableItemContainer = document.createElement('div');
+    clickableItemContainer.style.backgroundColor = '#F0EAD6';
+    clickableItemContainer.style.border = '2px solid black';
+    clickableItemContainer.style.minWidth = '200px';
+    clickableItemContainer.style.minHeight = '320px';
+    clickableItemContainer.style.margin = '10px';
+    clickableItemContainer.style.borderRadius = '15px';
+    clickableItemContainer.style.cursor = 'pointer';
+
+    clickableItemContainer.appendChild(textElement);
+    clickableItemContainer.appendChild(plusElement);
+
+    return clickableItemContainer;
+}
+
+function createFormCard(){
+
+    const form = document.createElement('form');
+    form.id = 'addForm';
+
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Name:';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.name = 'name';
+    nameInput.placeholder = 'Scooby';
+    
+
+    const breedLabel = document.createElement('label');
+    breedLabel.textContent = 'Breed:';
+    const breedInput = document.createElement('input');
+    breedInput.type = 'text';
+    breedInput.name = 'breed';
+    breedInput.placeholder = 'Great Dane';
+
+    const urlLabel = document.createElement('label');
+    urlLabel.textContent = 'Image URL:';
+    const urlInput = document.createElement('input');
+    urlInput.type = 'url';
+    urlInput.name = 'urlInput';
+    urlInput.placeholder = 'www.puppyimage.com';
+
+
+    const submitButton = document.createElement('input');
+    submitButton.type = 'submit';
+    submitButton.value = 'Submit';
+    submitButton.addEventListener("click", (event) =>{
+        event.preventDefault();
+
+        if(nameInput.value === '' || breedInput.value === ''){
+            alert("You must fill all fields before you submit")
+        }
+        else if(!isValidURL(urlInput.value)){
+            alert("You must provide a valid url");
+        }
+        else{
+            const name = nameInput.value;
+            const breed = breedInput.value;
+            const imageUrl = urlInput.value;
+            addPuppyToDataBase(name, breed, imageUrl);
+            fetchDogData(API_URL);
+            renderImages();
+        }    
+    })
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'X';
+    closeButton.style.backgroundColor = '#FF605C';
+    closeButton.style.borderRadius = '50%';
+    closeButton.style.padding = '0.5rem 0.7rem';
+    closeButton.style.float = 'right';
+    closeButton.style.margin = '10px';
+
+
+    closeButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        renderImages();
+    })
+
+    form.appendChild(nameLabel);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(nameInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(breedLabel);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(breedInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(urlLabel);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(urlInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(submitButton);
+    form.style.paddingTop = '60px';
+    form.style.paddingLeft = '10px';
+
+
+    const clickableItemContainer = document.createElement('div');
+    clickableItemContainer.style.backgroundColor = '#F0EAD6';
+    clickableItemContainer.style.border = '2px solid black';
+    clickableItemContainer.style.minWidth = '200px';
+    clickableItemContainer.style.minHeight = '320px';
+    clickableItemContainer.style.margin = '10px';
+    clickableItemContainer.style.borderRadius = '15px';
+
+    clickableItemContainer.appendChild(closeButton);
+
+    clickableItemContainer.appendChild(form);
+
+    return clickableItemContainer;
+}
+
 //renders the puppies that are not in a roster
 function renderImages(){
 
@@ -108,6 +234,16 @@ function renderImages(){
             openModal();
         });
     })
+
+    const addCard = createAddCard();
+    thumbnailContainer.appendChild(addCard);
+    
+    addCard.addEventListener("click", () => {
+
+        thumbnailContainer.removeChild(addCard);
+        formCard = createFormCard();
+        thumbnailContainer.appendChild(formCard);
+    })
 }
 //renders the puppies that are in a roster
 function renderRoster(){
@@ -115,17 +251,14 @@ function renderRoster(){
 
     roster.forEach(item => {
 
-        currentId = item.id;
         const clickableItemContainer = createCard(item);
         rosterContainer.appendChild(clickableItemContainer);
 
         clickableItemContainer.addEventListener("click", () => {
            if(confirm("Are you sure you wanna remove " + 
-            roster[rosterGetDog(currentId)].puppyName + " from the roster?")){
+            item.puppyName + " from the roster?")){
                 
-            console.log("te " + item.id);
-                currentId = item.id;
-                removeDogFromRoster(currentId);
+                removeDogFromRoster(item.id);
                 renderImages();
                 renderRoster();
                 updateInstructions();
@@ -152,7 +285,6 @@ const openModal = function () {
 function renderModal(){
 
     dogDescription.innerHTML = '';
-    console.log("is modal rendering?");
     currentDogIndex = getDog(currentId);
     console.log(images[currentId]);
 
@@ -236,6 +368,41 @@ function updateInstructions(){
         instructions.textContent = 'Click on puppy to remove from roster';
     }
 }
+
+async function addPuppyToDataBase(inName, inBreed, inImageUrl){
+    try {
+        const response = await fetch(
+          API_URL,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: inName,
+              breed: inBreed,
+              imageUrl: inImageUrl
+            }),
+          }
+        );
+        const result = await response.json();
+        console.log("Success! " + result);
+        alert("Sucessfully Added Puppy!")
+      } catch (err) {
+        console.error(err);
+        alert("Oh no! Puppy could not be submitted");
+
+      }
+}
+
+function isValidURL(url) {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 
 //Driver Code///////////////////////////////////////////////////////////////////
 fetchDogData(API_URL);//////////////////////////////////////////////////////////
